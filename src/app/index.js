@@ -2,38 +2,41 @@ var React = require("react");
 var ReactDOM = require("react-dom");
 var createReactClass = require("create-react-class");
 require("./css/index.css");
-import { Router, Route, browserHistory, Link } from "react-router";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 var TodoItem = require("./todoItem");
 var AddItem = require("./addItem");
 var About = require("./about");
 
 var App = createReactClass({
-  render: function() {
+  render: function () {
     return (
-      <Router history={browserHistory}>
-        <Route path={"/"} component={TodoComponent} />
-        <Route path={"/about"} component={About} />
+      <Router>
+        <div>
+          <Route path="/" exact component={TodoComponent} />
+          <Route path="/about" component={About} />
+        </div>
       </Router>
     );
   }
 });
 
 var TodoComponent = createReactClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       todos: ["wash up", "eat breakfest", "buy flowers"]
     };
   },
-  render: function() {
+  render: function () {
     var todos = this.state.todos;
     todos = todos.map(
-      function(item, index) {
+      function (item, index) {
         return <TodoItem item={item} key={index} onDelete={this.onDelete} />;
       }.bind(this)
     );
     return (
       <div id="todo-list">
+        <Link to="/about">About</Link>
         <p>The busiest people have the most leisure..</p>
         <ul>{todos}</ul>
         <AddItem onAdd={this.onAdd} />
@@ -41,15 +44,15 @@ var TodoComponent = createReactClass({
     );
   },
 
-  onDelete: function(item) {
-    var updatedTodos = this.state.todos.filter(function(val, index) {
+  onDelete: function (item) {
+    var updatedTodos = this.state.todos.filter(function (val, index) {
       return item !== val;
     });
     this.setState({
       todos: updatedTodos
     });
   },
-  onAdd: function(item) {
+  onAdd: function (item) {
     var updatedTodos = this.state.todos;
     updatedTodos.push(item);
     this.setState({
